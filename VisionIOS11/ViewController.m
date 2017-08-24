@@ -22,22 +22,20 @@
 		if (request.results != nil) {
 			for (VNBarcodeObservation *result in request.results) {
 				if (result != nil) {
-					printf("Result : %s", result.symbology.UTF8String);
-					CIQRCodeDescriptor *desc = (CIQRCodeDescriptor *)result.barcodeDescriptor;
+					printf("Result : %s\n", result.symbology.UTF8String);
+					NSString *desc = result.payloadStringValue;
 					if (desc != nil) {
-						NSString *content = [[NSString alloc] initWithData:desc.errorCorrectedPayload encoding:NSUTF8StringEncoding];
-						
-						printf("Payload: %s", content.UTF8String);
-						printf("Error-Correction-Level: %li", desc.errorCorrectionLevel);
-						printf("Symbol-Version: %li", desc.symbolVersion);
+						printf("Payload: %s\n", [desc UTF8String]);
+						return;
 					}
 				}
+				
 			}
 		}
-		printf("No results");
+		printf("No results\n");
 	}];
 	
-	VNImageRequestHandler *handler = [[VNImageRequestHandler alloc] initWithCGImage: [[UIImage alloc] initWithContentsOfFile:@"Your file bro"].CGImage options:@{VNImageOptionProperties:@""}];
+	VNImageRequestHandler *handler = [[VNImageRequestHandler alloc] initWithCGImage: [UIImage imageNamed:@"barcode3"].CGImage options:@{VNImageOptionProperties:@""}];
 	NSError *error = [[NSError alloc] init];
 	
 	[handler performRequests:@[barcodeRequest] error:&error];
